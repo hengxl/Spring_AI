@@ -11,7 +11,9 @@ spring:
   ai:
     dashscope:
       api-key: sk-4e7c338ec76e48ccbc289dfef25bd2e2
-      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      # base-url: https://dashscope.aliyuncs.com/compatible-mode/v1 # 可省略，有默认值
       chat:
+        # 省略的话，默认是千问-Plus
         options:
-          model: qwen3-max
+        # model: qwen3-max
+          model: deepseek-v3.2
