@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>SSE流式提问</title>
+    <style>
+        .container {
+            width: 600px;
+            margin: 20px auto;
+            font-family: sans-serif;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            box-sizing: border-box;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #1677ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0056cc;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            min-height: 100px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+        .error {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h3>SSE流式提问</h3>
+    <textarea id="msgInput" placeholder="请输入你的问题..."></textarea>
+    <button onclick="sendMsg()">发送提问</button>
+    <button onclick="clearOutput()" style="margin-left: 10px; background-color: #6c757d;">清空输出</button>
+    <div class="output" id="answerOutput">等待提问...</div>
+</div>
+
+<script>
+    // 全局保存当前的EventSource连接，用于关闭旧连接
+    let currentEventSource = null;
+
+    function sendMsg() {
+        // 1. 获取用户输入
+        const msg = document.getElementById('msgInput').value.trim();
+        // 空输入判断
+        if (msg === "") {
+            alert("请输入提问内容！");
+            return false;
+        }
+
+        // 2. 清空旧输出内容
+        const answerOutput = document.getElementById('answerOutput');
+        answerOutput.innerHTML = '<span class="loading">正在加载回答...</span>';
+
+        // 3. 关闭旧连接（避免多连接冲突）
+        if (currentEventSource) {
+            currentEventSource.close();
+            currentEventSource = null;
+        }
+
+        // 4. 处理中文/特殊字符编码问题（URL编码）
+        const encodedMsg = encodeURIComponent(msg);
+
+        // 5. 创建新的EventSource连接
+        currentEventSource = new EventSource(`http://localhost:8080/qwen?msg=${encodedMsg}`);
+
+        // 6. 监听流式消息（修正：追加逻辑保留，但初始已清空）
+        currentEventSource.onmessage = function (event) {
+            const data = event.data;
+            // 可选：如果服务器返回结束标识（如'done'），关闭连接
+            if (data === 'done') {
+                currentEventSource.close();
+                return;
+            }
+            // 移除loading样式后追加内容
+            answerOutput.innerHTML = answerOutput.innerHTML.replace('<span class="loading">正在加载回答...</span>', '');
+            answerOutput.innerHTML += data;
+        };
+
+        // 7. 监听事件错误
+        eventSource.onerror = function (error) {
+            console.error('EventSource error:', error);
+            eventSource.close(); // 关闭连接
+        }
+    }
+
+    // 清空输出函数
+    function clearOutput() {
+        document.getElementById('answerOutput').innerHTML = '等待提问...';
+        // 清空时也关闭连接
+        if (currentEventSource) {
+            currentEventSource.close();
+            currentEventSource = null;
+        }
+    }
+</script>
+</body>
+</html>

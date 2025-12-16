@@ -10,11 +10,13 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>SAA-01-SimpleExample</module>
+        <module>SAA-00-Chat-Config</module>
         <module>SAA-00-Common</module>
+        <module>SAA-01-SimpleExample</module>
         <module>SAA-02-ChatClient-Create</module>
         <module>SAA-03-ChatClient-CreateConfig</module>
         <module>SAA-04-MultiModel</module>
+        <module>SAA-05-AI-Project</module>
     </modules>
 
     <properties>

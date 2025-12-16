@@ -1,0 +1,19 @@
+# 大模型对话中文乱码 UTF-8 编码处理
+server:
+  servlet:
+    encoding:
+      enable: true
+      force: true
+      charset: UTF-8
+
+# Spring AI Alibaba 配置
+spring:
+  ai:
+    dashscope:
+      api-key: sk-4e7c338ec76e48ccbc289dfef25bd2e2
+      # base-url: https://dashscope.aliyuncs.com/compatible-mode/v1 # 可省略，有默认值
+      # chat:
+        # 省略的话，默认是千问-Plus
+        # options:
+        # model: qwen3-max
+        # model: deepseek-v3.2
