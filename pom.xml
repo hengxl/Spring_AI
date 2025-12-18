@@ -17,6 +17,7 @@
         <module>SAA-03-ChatClient-CreateConfig</module>
         <module>SAA-04-MultiModel</module>
         <module>SAA-05-AI-Project</module>
+        <module>SAA-06-Prompt-Set</module>
     </modules>
 
     <properties>
