@@ -18,6 +18,7 @@
         <module>SAA-04-MultiModel</module>
         <module>SAA-05-AI-Project</module>
         <module>SAA-06-Prompt-Set</module>
+        <module>SAA-07-Dynamic-Prompt</module>
     </modules>
 
     <properties>
@@ -77,13 +78,22 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- TODO: 重要配置
+           Maven插件默认编译是JDK8的语言环境，在更高的JDK版本里，可能会出现语言不适配的情况
+           所以需要手动指定JDK版本号与项目版本号一致！
+    -->
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot.version}</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <configuration>
+                        <source>17</source>
+                        <target>17</target>
+                        <release>17</release>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
